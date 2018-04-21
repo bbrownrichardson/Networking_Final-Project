@@ -8,32 +8,44 @@ Hangman Game
 """
 
 from socket import *
+import atexit
 
 serverName = 'localhost'  # put IP address
-serverPort = 10000
+serverPort = 28000
+clientSocket = socket(AF_INET, SOCK_DGRAM)
 
+
+def when_exit():
+    clientSocket.close()
 
 class Client:
     def __init__(self):
-        clientSocket = socket(AF_INET, SOCK_DGRAM)
-        mssg = input('Enter a character to guess: ').lower().strip()
+        # mssg = input('Enter a character to guess: ').lower().strip()
 
-        if len(mssg) == 1:
-            clientSocket.sendto(mssg.encode('utf-8'), (serverName, serverPort))
+        while True:
+            mssg = input('Enter a character to guess: ').lower().strip()
 
-            # Set up a new connection from the client
-            modified_messg, server = clientSocket.recvfrom(2048)
+            if mssg == 'quit':
+               clientSocket.close()
 
-            print(modified_messg)
-            clientSocket.close()
+            elif len(mssg) == 1:
+                clientSocket.sendto(mssg.encode('utf-8'),
+                                            (serverName, serverPort))
 
-        # if modified_messg == 'Winner':
-        #     pass
-        else:
-            print('please enter one character \n')
+                # Set up a new connection from the client
+                modified_messg, server = clientSocket.recvfrom(2048)
+
+                print(modified_messg)
+
+            # if modified_messg == 'Winner':
+            #     pass
+            else:
+                print('please enter one character \n')
+                clientSocket.close()
 
 
 def main():
+    atexit.register(clientSocket.close())
     Client()
 
 

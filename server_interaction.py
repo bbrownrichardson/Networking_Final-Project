@@ -9,9 +9,11 @@ Hang Man Game
 
 from socket import *
 import random
+import atexit
 
 serverName = 'xxx.xxx.xxx.xxx'  # put IP address
-serverPort = 10000
+serverPort = 28000
+serverSocket = socket(AF_INET, SOCK_DGRAM)
 
 words_to_choose = ['fast', 'tiger', 'lounge', 'anxiety', 'notion', 'marathon',
                    'flood', 'load', 'cope', 'obscure', 'stress', 'silly',
@@ -24,6 +26,10 @@ correct_selection = ' is a correct selection'
 incorrect_selection = ' is not a correct selection'
 
 current_standing = 'So far you have the letters '
+
+
+def when_exit():
+    serverSocket.close()
 
 
 class Server:
@@ -39,10 +45,10 @@ class Server:
             self.letters.append(char)
             self.selected_letters.append('_')
 
-        serverSocket = socket(AF_INET, SOCK_DGRAM)
-
         # Bind the socket to server address and server port
         serverSocket.bind(("", serverPort))
+
+        print(self.letters)
 
         # Server should be up and running and listening to the incoming connections
         while True:
@@ -59,10 +65,13 @@ class Server:
 
             # if len(self.letters) == 0:
             #     serverSocket.close()
+            elif character == 'quit':
+                serverSocket.close()
             else:
                 # response = character.encode('UTF-8') + incorrect_selection
                 # print(response)
-                serverSocket.sendto(correct_selection.encode('UTF-8'), clientAddress)
+                serverSocket.sendto(incorrect_selection.encode('UTF-8'),
+                                    clientAddress)
 
     def get_char_index(self, letter_list, character):
         for i in range(0, len(letter_list), 1):
@@ -74,7 +83,12 @@ class Server:
 
 
 def main():
+    
     Server()
+
+
+atexit.register(when_exit())
+
 
 if __name__ == '__main__':
     main()
