@@ -9,21 +9,27 @@ Hang Man Game
 
 from socket import *
 import random
+import atexit
 
-serverName = 'xxx.xxx.xxx.xxx'  # put IP address
-serverPort = 10000
+serverPort = 18000
+serverSocket = socket(AF_INET, SOCK_DGRAM)
 
-words_to_choose = ['fast', 'tiger', 'lounge', 'anxiety', 'notion', 'marathon',
-                   'flood', 'load', 'cope', 'obscure', 'stress', 'silly',
-                   'slippery', 'medieval', 'magazine', 'helmet', 'memory',
-                   'pierce', 'old age', 'loot', 'scream', 'carrot', 'mile',
-                   'sketch', 'systematic']
+words_to_choose = ['queue', 'protocols', 'datagram', 'boomboomboom', 'sommers',
+                   'socket','flood', 'networking', 'bandwidth', 'frames',
+                   'segment', 'handshake', 'acknowledgment', 'persistent',
+                   'bynres', 'delay', 'memory','connectionless', 'congestion',
+                   'dijkstra','pipeline', 'multiplexing', 'visa',
+                   'fox', 'packet']
 
 correct_selection = ' is a correct selection'
-
 incorrect_selection = ' is not a correct selection'
-
 current_standing = 'So far you have the letters '
+
+
+@atexit.register
+def when_exit():
+    print('Server closed')
+    serverSocket.close()
 
 
 class Server:
@@ -34,47 +40,55 @@ class Server:
         self.chosen_word = random.choice(words_to_choose)
         self.letters = list()
         self.selected_letters = list()
+        self.guesses = 0
 
         for char in self.chosen_word:
             self.letters.append(char)
             self.selected_letters.append('_')
 
-        serverSocket = socket(AF_INET, SOCK_DGRAM)
-
         # Bind the socket to server address and server port
         serverSocket.bind(("", serverPort))
 
-        # Server should be up and running and listening to the incoming connections
+        print(self.letters)
+        print('Ready to serve...' + self.chosen_word)
+    # Server should be up and running and listening to the incoming connections
         while True:
-            print('Ready to serve...' + self.chosen_word)
             # Set up a new connection from the client
-            character, clientAddress = serverSocket.recvfrom(2048)
-            if character in self.letters:
-                self.get_char_index(self.letters, character)
-                # response = character.encode('UTF-8') + correct_selection
-                # print(response)
-                serverSocket.sendto(correct_selection.encode('UTF-8'), clientAddress)
-                serverSocket.sendto(''.join(self.selected_letters) +
-                                    correct_selection, clientAddress)
+            character, client_address = serverSocket.recvfrom(2048)
 
-            # if len(self.letters) == 0:
-            #     serverSocket.close()
+            if character.decode('UTF-8') in self.letters:
+                self.get_char_index(self.letters, character.decode('UTF-8'))
+
+                response = character.decode('UTF-8') + correct_selection + \
+                '\n\n' + ' '.join(self.selected_letters)
+                serverSocket.sendto(response.encode('UTF-8'), client_address)
+
             else:
-                # response = character.encode('UTF-8') + incorrect_selection
-                # print(response)
-                serverSocket.sendto(correct_selection.encode('UTF-8'), clientAddress)
+                # this condition is currently left broken as a quick way to
+                # exit the program. The solution is currently in mind
+                self.guesses += 1
+
+                if self.guesses == 5:
+                    pass
+                else:
+                    response = character + incorrect_selection + '\n\n' + \
+                               'You Currently Have ' + str(5 - self.guesses)\
+                               + 'Left'
+                    serverSocket.sendto(response.encode('UTF-8'),
+                                        client_address)
 
     def get_char_index(self, letter_list, character):
         for i in range(0, len(letter_list), 1):
             if letter_list[i] == character:
                 self.selected_letters[i] = character
-                self.letters.remove(self.letters[i])
+                self.letters[i] = '_'
             else:
                 pass
 
 
 def main():
     Server()
+
 
 if __name__ == '__main__':
     main()
