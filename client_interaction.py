@@ -11,12 +11,15 @@ from socket import *
 import atexit
 
 serverName = 'localhost'  # put IP address
-serverPort = 28000
+serverPort = 18000
 clientSocket = socket(AF_INET, SOCK_DGRAM)
 
 
+@atexit.register
 def when_exit():
+    print('Client closed')
     clientSocket.close()
+
 
 class Client:
     def __init__(self):
@@ -35,17 +38,14 @@ class Client:
                 # Set up a new connection from the client
                 modified_messg, server = clientSocket.recvfrom(2048)
 
-                print(modified_messg)
+                print(modified_messg.decode('UTF-8'))
 
-            # if modified_messg == 'Winner':
-            #     pass
             else:
                 print('please enter one character \n')
                 clientSocket.close()
 
 
 def main():
-    atexit.register(clientSocket.close())
     Client()
 
 
