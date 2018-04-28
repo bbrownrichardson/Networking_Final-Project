@@ -8,6 +8,7 @@ Hang Man Game
 """
 
 from socket import *
+import sys
 import random
 import atexit
 
@@ -51,7 +52,7 @@ class Server:
 
         print(self.letters)
         print('Ready to serve...' + self.chosen_word)
-    # Server should be up and running and listening to the incoming connections
+
         while True:
             # Set up a new connection from the client
             character, client_address = serverSocket.recvfrom(2048)
@@ -59,25 +60,52 @@ class Server:
             if character.decode('UTF-8') in self.letters:
                 self.get_char_index(self.letters, character.decode('UTF-8'))
 
-                response = character.decode('UTF-8') + correct_selection + \
-                '\n\n' + ' '.join(self.selected_letters)
-                serverSocket.sendto(response.encode('UTF-8'), client_address)
+                # if there are no blanks in selected_letters user has
+                # correctly guess all letter and win response will be sent
+                # to client rendering a win and exit
+                if '_' not in self.selected_letters:
+                    response = 'WIN'
+                    serverSocket.sendto(response.encode('UTF-8'),
+                                        client_address)
+                    sys.exit()
+
+                else:
+                    response = character.decode('UTF-8') + correct_selection + \
+                    '\n\n' + ' '.join(self.selected_letters) + '\n'
+                    serverSocket.sendto(response.encode('UTF-8'), client_address)
+
+            elif character.decode('UTF-8') == 'quit':
+                sys.exit()
 
             else:
-                # this condition is currently left broken as a quick way to
-                # exit the program. The solution is currently in mind
                 self.guesses += 1
 
+                # if user runs out of guess a LOSS response will be sent to
+                # client rendering a loss and exit
                 if self.guesses == 5:
-                    pass
+                    response = 'LOSS'
+                    serverSocket.sendto(response.encode('UTF-8'),
+                                        client_address)
+                    sys.exit()
+
                 else:
-                    response = character + incorrect_selection + '\n\n' + \
-                               'You Currently Have ' + str(5 - self.guesses)\
-                               + 'Left'
+                    response = '\n' + character.decode('UTF-8') + \
+                               incorrect_selection + '\n\n' + \
+                               'You currently have ' + str(5 - self.guesses)\
+                               + ' guesses left\n\n' + \
+                               ' '.join(self.selected_letters) + '\n'
+
                     serverSocket.sendto(response.encode('UTF-8'),
                                         client_address)
 
     def get_char_index(self, letter_list, character):
+        """
+        function to replace blanks in selected_letters list with selected
+        letters and replace selected letters with blanks in letter_list
+        :param letter_list: list of letters of word being guessed
+        :param character: selected character
+        :return: None
+        """
         for i in range(0, len(letter_list), 1):
             if letter_list[i] == character:
                 self.selected_letters[i] = character
