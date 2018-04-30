@@ -16,10 +16,10 @@ serverPort = 18000
 serverSocket = socket(AF_INET, SOCK_DGRAM)
 
 words_to_choose = ['queue', 'protocols', 'datagram', 'boomboomboom', 'sommers',
-                   'socket','flood', 'networking', 'bandwidth', 'frames',
+                   'socket', 'flood', 'networking', 'bandwidth', 'frames',
                    'segment', 'handshake', 'acknowledgment', 'persistent',
-                   'bynres', 'delay', 'memory','connectionless', 'congestion',
-                   'dijkstra','pipeline', 'multiplexing', 'visa',
+                   'bynres', 'delay', 'memory', 'connectionless', 'congestion',
+                   'dijkstra', 'pipeline', 'multiplexing', 'visa',
                    'fox', 'packet']
 
 correct_selection = ' is a correct selection'
@@ -70,9 +70,11 @@ class Server:
                     sys.exit()
 
                 else:
-                    response = character.decode('UTF-8') + correct_selection + \
-                    '\n\n' + ' '.join(self.selected_letters) + '\n'
-                    serverSocket.sendto(response.encode('UTF-8'), client_address)
+                    response = character.decode('UTF-8') + correct_selection \
+                                + '\n\n' + ' '.join(self.selected_letters) \
+                                + '\n'
+                    serverSocket.sendto(response.encode('UTF-8'),
+                                        client_address)
 
             elif character.decode('UTF-8') == 'quit':
                 sys.exit()
@@ -82,19 +84,112 @@ class Server:
 
                 # if user runs out of guess a LOSS response will be sent to
                 # client rendering a loss and exit
-                if self.guesses == 5:
+                if self.guesses == 6:
                     response = 'LOSS'
                     serverSocket.sendto(response.encode('UTF-8'),
                                         client_address)
                     sys.exit()
 
-                else:
+                elif self.guesses == 5:
                     response = '\n' + character.decode('UTF-8') + \
                                incorrect_selection + '\n\n' + \
-                               'You currently have ' + str(5 - self.guesses)\
+                               'You currently have ' + str(6 - self.guesses)\
                                + ' guesses left\n\n' + \
-                               ' '.join(self.selected_letters) + '\n'
+                               ' '.join(self.selected_letters) + '\n' + \
+                                r"""
+                    ____
+                   |    |
+                   |    o
+                   |   /|\
+                   |    |
+                   |   /
+                  _|_
+                 |   |______
+                 |          |
+                 |__________|
+                                """
+                    serverSocket.sendto(response.encode('UTF-8'),
+                                        client_address)
+                elif self.guesses == 4:
+                    response = '\n' + character.decode('UTF-8') + \
+                               incorrect_selection + '\n\n' + \
+                               'You currently have ' + str(6 - self.guesses)\
+                               + ' guesses left\n\n' + \
+                               ' '.join(self.selected_letters) + '\n' + \
+                                r"""
+                    ____
+                   |    |
+                   |    o
+                   |   /|\
+                   |    |
+                   |   
+                  _|_
+                 |   |______
+                 |          |
+                 |__________|
+                                """
+                    serverSocket.sendto(response.encode('UTF-8'),
+                                        client_address)
+                elif self.guesses == 3:
+                    response = '\n' + character.decode('UTF-8') + \
+                               incorrect_selection + '\n\n' + \
+                               'You currently have ' + str(6 - self.guesses)\
+                               + ' guesses left\n\n' + \
+                               ' '.join(self.selected_letters) + '\n' + \
+                                r"""
+                    ____
+                   |    |
+                   |    o
+                   |   /|\
+                   |    
+                   |   
+                  _|_
+                 |   |______
+                 |          |
+                 |__________|
+                                """
+                    serverSocket.sendto(response.encode('UTF-8'),
+                                        client_address)
 
+                elif self.guesses == 2:
+                    response = '\n' + character.decode('UTF-8') + \
+                               incorrect_selection + '\n\n' + \
+                               'You currently have ' + str(6 - self.guesses)\
+                               + ' guesses left\n\n' + \
+                               ' '.join(self.selected_letters) + '\n' + \
+                                r"""
+                    ____
+                   |    |
+                   |    o
+                   |   /|
+                   |    
+                   |   
+                  _|_
+                 |   |______
+                 |          |
+                 |__________|
+                                """
+                    serverSocket.sendto(response.encode('UTF-8'),
+                                        client_address)
+
+                elif self.guesses == 1:
+                    response = '\n' + character.decode('UTF-8') + \
+                               incorrect_selection + '\n\n' + \
+                               'You currently have ' + str(6 - self.guesses)\
+                               + ' guesses left\n\n' + \
+                               ' '.join(self.selected_letters) + '\n' + \
+                                r"""
+                    ____
+                   |    |
+                   |    o
+                   |   
+                   |    
+                   |   
+                  _|_
+                 |   |______
+                 |          |
+                 |__________|
+                                """
                     serverSocket.sendto(response.encode('UTF-8'),
                                         client_address)
 

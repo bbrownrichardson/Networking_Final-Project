@@ -37,19 +37,21 @@ class Client:
               'the user MUST enter the phrase [quit] and the\n'
               'game will exit.\n\n'
               'CREATORS: BRIANNA AND SARAH\n'
-              'SHOUTOUT TO DR.VISA!!\n\n')
+  
+              'TRY NOT TO LEAVE THE HOMIEEE HANGING LIKE THIS:')
 
-        # looking into potential adding this to game instead of guesses
-        # print("""   ____
-        #            |    |
-        #            |    o
-        #            |   /|\
-        #            |    |
-        #            |   / \
-        #           _|_
-        #          |   |______
-        #          |          |
-        #          |__________|""")
+        print(r""" 
+                    ____
+                   |    |
+                   |    o
+                   |   /|\
+                   |    |
+                   |   / \
+                  _|_
+                 |   |______
+                 |          |
+                 |__________|""" + \
+            """\n\n\nSHOUTOUT TO DR.VISA!!\n\n\n""")
 
         while True:
             mssg = input('------------------------------\n'
@@ -69,7 +71,19 @@ class Client:
 
                 # if client recieves "LOSS", user has lost the game
                 if modified_messg.decode('UTF-8') == 'LOSS':
-                    print('\nALL OUT OF GUESSES! YOU LOSE!!')
+                    print(r""" 
+                    ____
+                   |    |
+                   |    o
+                   |   /|\
+                   |    |
+                   |   / \
+                  _|_
+                 |   |______
+                 |          |
+                 |__________|""")
+
+                    print('\n\nALL OUT OF GUESSES! YOU LOSE!!')
                     sys.exit()
 
                 # if client recieves "WIN", user has WIN the game
