@@ -84,16 +84,16 @@ class Server:
 
                 # if user runs out of guess a LOSS response will be sent to
                 # client rendering a loss and exit
-                if self.guesses == 6:
+                if self.guesses == 7:
                     response = 'LOSS'
                     serverSocket.sendto(response.encode('UTF-8'),
                                         client_address)
                     sys.exit()
 
-                elif self.guesses == 5:
+                elif self.guesses == 6:
                     response = '\n' + character.decode('UTF-8') + \
                                incorrect_selection + '\n\n' + \
-                               'You currently have ' + str(6 - self.guesses)\
+                               'You currently have ' + str(7 - self.guesses)\
                                + ' guesses left\n\n' + \
                                ' '.join(self.selected_letters) + '\n' + \
                                 r"""
@@ -110,10 +110,10 @@ class Server:
                                 """
                     serverSocket.sendto(response.encode('UTF-8'),
                                         client_address)
-                elif self.guesses == 4:
+                elif self.guesses == 5:
                     response = '\n' + character.decode('UTF-8') + \
                                incorrect_selection + '\n\n' + \
-                               'You currently have ' + str(6 - self.guesses)\
+                               'You currently have ' + str(7 - self.guesses)\
                                + ' guesses left\n\n' + \
                                ' '.join(self.selected_letters) + '\n' + \
                                 r"""
@@ -130,10 +130,10 @@ class Server:
                                 """
                     serverSocket.sendto(response.encode('UTF-8'),
                                         client_address)
-                elif self.guesses == 3:
+                elif self.guesses == 4:
                     response = '\n' + character.decode('UTF-8') + \
                                incorrect_selection + '\n\n' + \
-                               'You currently have ' + str(6 - self.guesses)\
+                               'You currently have ' + str(7 - self.guesses)\
                                + ' guesses left\n\n' + \
                                ' '.join(self.selected_letters) + '\n' + \
                                 r"""
@@ -151,10 +151,10 @@ class Server:
                     serverSocket.sendto(response.encode('UTF-8'),
                                         client_address)
 
-                elif self.guesses == 2:
+                elif self.guesses == 3:
                     response = '\n' + character.decode('UTF-8') + \
                                incorrect_selection + '\n\n' + \
-                               'You currently have ' + str(6 - self.guesses)\
+                               'You currently have ' + str(7 - self.guesses)\
                                + ' guesses left\n\n' + \
                                ' '.join(self.selected_letters) + '\n' + \
                                 r"""
@@ -172,10 +172,31 @@ class Server:
                     serverSocket.sendto(response.encode('UTF-8'),
                                         client_address)
 
+                elif self.guesses == 2:
+                    response = '\n' + character.decode('UTF-8') + \
+                               incorrect_selection + '\n\n' + \
+                               'You currently have ' + str(7 - self.guesses)\
+                               + ' guesses left\n\n' + \
+                               ' '.join(self.selected_letters) + '\n' + \
+                                r"""
+                    ____
+                   |    |
+                   |    o
+                   |    |
+                   |    
+                   |   
+                  _|_
+                 |   |______
+                 |          |
+                 |__________|
+                                """
+                    serverSocket.sendto(response.encode('UTF-8'),
+                                        client_address)
+
                 elif self.guesses == 1:
                     response = '\n' + character.decode('UTF-8') + \
                                incorrect_selection + '\n\n' + \
-                               'You currently have ' + str(6 - self.guesses)\
+                               'You currently have ' + str(7 - self.guesses)\
                                + ' guesses left\n\n' + \
                                ' '.join(self.selected_letters) + '\n' + \
                                 r"""
