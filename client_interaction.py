@@ -11,7 +11,7 @@ from socket import *
 import sys
 import atexit
 
-serverName = 'localhost'  # put IP address
+serverName = None #'140.103.35.132'  # put IP address
 serverPort = 18000
 clientSocket = socket(AF_INET, SOCK_DGRAM)
 
@@ -24,6 +24,8 @@ def when_exit():
 
 class Client:
     def __init__(self):
+        serverName = input(r'ENTER SERVER IP Address: ')
+
         print('\n\n'
               '______________________________________________\n\n'
               '              HANGMAN GAME                      \n'
@@ -61,7 +63,7 @@ class Client:
                 clientSocket.sendto(mssg.encode('utf-8'),
                                     (serverName, serverPort))
                 print("""\n\n\nDUECES\n\n
- ░░░░░░░░░░░░▄▀▀█▄░░░░░▄▀▀▄░░░░░░
+░░░░░░░░░░░░▄▀▀█▄░░░░░▄▀▀▄░░░░░░
 ░░░░░░░░░░░░█░░░█░░░░░█░░█░░░░░░
 ░░░░░░░░░░░░▀▄░░█░░░░█░░░█░░░░░░
 ░░░░░░░░░░░░░█░░█░░░░█░░░█░░░░░░
